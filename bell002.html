@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="a-html">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Welcome to Glitch!</title>
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta aframe-injected="" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no,minimal-ui">
+    <meta aframe-injected="" name="mobile-web-app-capable" content="yes">
+    <meta aframe-injected="" name="theme-color" content="black">
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-physics-system/v2.0.0/dist/aframe-physics-system.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+</head>
+
+<body class="a-body">
+    <a-scene physics="debug: true" class="fullscreen" canvas="" inspector="" keyboard-shortcuts="" screenshot="" vr-mode-ui="">
+        <a-assets>
+            <!-- Mario: https://vr.google.com/objects/0P2EpgeguQV -->
+            <a-asset-item id="mario-obj" src="https://cdn.glitch.com/9152955f-bedd-4841-8ce7-182958f1f06e%2Fmodel.obj?1499896979737"></a-asset-item>
+            <a-asset-item id="mario-mtl" src="https://cdn.glitch.com/9152955f-bedd-4841-8ce7-182958f1f06e%2Fmaterials.mtl?1499896977081"></a-asset-item>
+
+            <!-- Video from aframe.io example -->
+
+        </a-assets>
+
+
+        <a-entity id="boss" obj-model="obj: #mario-obj; mtl: #mario-mtl" position="1 1 -10" rotation="0 0 0" dynamic-body="mass: 10" scale="" visible="" quaternion="" velocity=""></a-entity>
+        <a-entity id="boss" obj-model="obj: #mario-obj; mtl: #mario-mtl" position="0 1 -9" rotation="0 0 0" dynamic-body="mass: 10" scale="" visible="" quaternion="" velocity=""></a-entity>
+        <a-entity id="boss" obj-model="obj: #mario-obj; mtl: #mario-mtl" position="2 1 -9" rotation="0 0 0" dynamic-body="mass: 10" scale="" visible="" quaternion="" velocity=""></a-entity>
+
+
+        <a-entity id="android" obj-model="obj: #android-obj; mtl: #android-mtl" position="1 1 -9" rotation="2 2 2 " dynamic-body="mass: 10" scale="" visible="" quaternion="" velocity=""></a-entity>
+
+        <a-box color="#4Ccba9" position="1 2 1" rotation="0 45 0" c></a-box>
+
+
+        <a-sphere position="0 2.534 -4.826" color="red" scale="1 1 1" dynamic-body="mass: 1" radius="0.1" rotation="" visible="" material="" geometry="" quaternion="" velocity=""></a-sphere>
+        <a-entity id="player" camera="userHeight: 2" look-controls="" wasd-controls="" static-body="" position="" rotation="" scale="" visible="">
+            <a-cylinder position="0 -0.75 0" geometry="height:1.7;segmentsRadial:8;radius:0.25" visible="false" rotation="" scale="" material=""></a-cylinder>
+        </a-entity>
+        <a-plane static-body="" rotation="-90 0 0" width="100" height="100" color="black" visible="false" position="" scale="" material="" geometry=""></a-plane>
+
+        <a-box id="playerModel" src="https://cdn.glitch.com/b870d9ec-1139-44f9-b462-223e4a2c74e7%2Fdirt.jpg?1490308269805" position="1 1 1" rotation="0 45 0" c></a-box>
+
+
+        <a-entity id="man" obj-model="obj: #mario-obj; mtl: #mario-mtl" position="0 1 0" rotation="0 180 0" dynamic-body="mass: 10" scale="" visible="" quaternion="" velocity=""></a-entity>
+        <!-- <a-videosphere src="#video" rotation="0 180 0"></a-videosphere> -->
+        <canvas class="a-canvas a-grab-cursor" data-aframe-canvas="true" width="1053" height="738" style="width: 1053px; height: 738px;"></canvas>
+        <div class="a-enter-vr" aframe-injected=""><button class="a-enter-vr-button" aframe-injected=""></button></div>
+        <div class="a-orientation-modal a-hidden" aframe-injected=""><button aframe-injected="">Exit VR</button></div>
+        <a-entity light="" data-aframe-default-light="" aframe-injected="" position="" rotation="" scale="" visible=""></a-entity>
+        <a-entity light="" position="" data-aframe-default-light="" aframe-injected="" rotation="" scale="" visible=""></a-entity>
+    </a-scene>
+    <script>
+        var thisWeb = io(),
+            userName = location.hash;
+        thisWeb.emit("add user", userName);
+        thisWeb.on("chat message", function(data) {
+            console.log(data);
+            data = JSON.parse(data);
+            if (data.from != userName) {
+                document.querySelector("#playerModel").setAttribute("position", data.position);
+            }
+        });
+        document.body.onkeydown = function() {
+            var player_condition = {
+                from: userName,
+                position: document.querySelector("#player").getAttribute("position")
+            };
+            thisWeb.emit("chat message", JSON.stringify(player_condition));
+        };
+    </script>
+</body>
+
+</html>
